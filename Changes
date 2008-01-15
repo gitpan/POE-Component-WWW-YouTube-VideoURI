@@ -1,0 +1,6 @@
+Revision history for Perl extension POE::Component::WWW::YouTube::VideoURI.
+
+0.01  Sun Jan 13 08:40:12 2008
+	- original version; created by h2xs 1.23 with options
+		-X --skip-exporter --skip-autoloader -v 0.01 -n POE::Component::WWW::YouTube::VideoURI
+
