@@ -4,7 +4,7 @@ use 5.008008;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use POE qw( Wheel::Run  Filter::Reference  Filter::Line );
 use Carp;
@@ -895,6 +895,15 @@ methods/events.
 In case of an error this key will be present and will contain the
 explanation of why we failed. (Note: read the C<store> event's
 description if you don't understand why we'd get the 304 error).
+
+=head3 is_store
+
+    { is_store => 1 }
+
+This key will be present if the event came from the C<store> event/method
+(I<including> the autostore from C<get_uri> event/method). This is
+generally a key you'd check on if you decide to send both "resolved uri"
+ and "completed download" events to the same event handler
 
 =head3 user defined arguments
 
