@@ -3,5 +3,8 @@ Makefile.PL
 MANIFEST
 README
 t/POE-Component-WWW-YouTube-VideoURI.t
+t/pod.t
+t/pod_coverage.t
 lib/POE/Component/WWW/YouTube/VideoURI.pm
+examples/tuber.pl
 META.yml                                 Module meta-data (added by MakeMaker)

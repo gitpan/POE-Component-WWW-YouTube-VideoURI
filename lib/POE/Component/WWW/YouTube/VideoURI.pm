@@ -4,7 +4,7 @@ use 5.008008;
 use strict;
 use warnings;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use POE qw( Wheel::Run  Filter::Reference  Filter::Line );
 use Carp;
@@ -146,7 +146,7 @@ sub _store {
         warn "No `flv_uri` parameter specified. Aborting...";
         return;
     }
-    
+        
     if ( $args->{store_session} ) {
         if ( my $ref = $kernel->alias_resolve( $args->{store_session} ) ) {
             $args->{sender} = $ref->ID;
@@ -203,7 +203,11 @@ sub _get_uri {
         warn "No `uri` parameter specified. Aborting...";
         return;
     }
-    
+
+    unless ( exists $args->{get_title} ) {
+        $args->{get_title} = 1;
+    }
+
     if ( $args->{session} ) {
         if ( my $ref = $kernel->alias_resolve( $args->{session} ) ) {
             $args->{sender} = $ref->ID;
@@ -346,10 +350,41 @@ sub _tube_wheel {
                 @{ $req }{ qw( error out ) } = ( $@, undef );
             }
             
+            $req->{title} = _get_video_title( $req->{uri} )
+                if $req->{get_title};
+            
             my $response = $filter->put( [ $req ] );
             print STDOUT @$response;
         }
     }
+}
+
+sub _get_video_title {
+    my $uri = shift;
+    my $ua = LWP::UserAgent->new(timeout => 30);
+    my $response = $ua->get( $uri );
+    if ( $response->is_success ) {
+        return _parse_title( $response->content );
+    }
+    
+    return 'ERROR';
+}
+
+sub _parse_title {
+    my $content = shift;
+    
+    # bad bad, HTML with regexes, oh my >_<
+    my ( $title )
+     = $content =~ m#<title>YouTube \s+ - \s+ (.+?) </title>#six;
+    
+    $title =~ s/\s+/ /;
+    require HTML::Entities;
+    HTML::Entities::decode_entities( $title );
+
+    return 'N/A'
+        unless defined $title;
+
+    return $title;
 }
 
 sub _store_wheel {
@@ -451,12 +486,13 @@ WWW::YouTube::VideoURI with download abilities.
         }
         else {
             print "Got FLV URI: $input->{out}\n";
+            print "Title is: $input->{title}\n";
             print "Starting download!\n";
             
             $kernel->post( tube => store => { 
                     flv_uri => $input->{out},
                     where   => '/home/zoffix/Desktop/Apex_Twin-Live.flv',
-                    event   => 'downloaded',
+                    store_event   => 'downloaded',
                 }
             );
         }
@@ -522,7 +558,7 @@ When set to a true value turns on output of debug messages.
 
 =head1 METHODS
 
-These are the object-oriented methods of the components.
+These are the object-oriented methods of the component.
 
 =head2 get_uri
 
@@ -584,6 +620,7 @@ Takes no arguments. Shuts the component down.
             uri           => 'http://www.youtube.com/watch?v=dcmRImiffVM',
             session       => 'foos',
             where         => '/tmp/foo.flv',
+            get_title     => 0,
             store_session => 'bars',
             store_event   => 'stored',
             lwp_options   => {
@@ -625,6 +662,16 @@ your browser when you are watching a movie).
 B<Optional>. Specifies an alternative POE Session to send the output to.
 Accepts either session alias, session ID or session reference. Defaults
 to the current session.
+
+=head3 get_title
+
+    { get_title => 0 }
+
+B<Optional>. Component is able to retrieve the title of the video.
+This functionality is enabled by default, however it requires an extra
+HTTP request to be issued which might slow things down. Thus is title
+of the video is not important to you, you may wish to set C<get_title>
+option to a false value. Defaults to C<1>.
 
 =head3 user defined arguments
 
@@ -787,6 +834,8 @@ event based interface.
     $VAR1 = {
           'out' => 'http://www.youtube.com/get_video.php?video_id=blah',
           'uri' => 'http://www.youtube.com/watch?v=dcmRImiffVM',
+          'get_title' => 1,
+          'title' => 'Some title',
           '_shtuf' => 'foos'
         };
 
@@ -794,6 +843,7 @@ event based interface.
           'out' => undef,
           'error' => '404 Not Found at lib/POE/Component/WWW/YouTube/VideoURI.pm line 345',
           'uri' => 'http://www.youtube.com/watch?v=blahblah',
+          'get_title' => 0,
           '_shtuf' => 'foos'
     };
 
@@ -825,6 +875,13 @@ and C<error> key (see below) will be present.
 This will be identical to whatever you've set in the C<uri> key in the
 C<get_uri> method/event. Using this key you can find out what belongs
 where when you are sending multiple requests.
+
+=head3 title
+
+    { 'title' => 'Some title' }
+
+This will contain the title of the video unless C<get_title> option
+to the C<get_uri> event/method was set to a false value.
 
 =head3 user defined variables
 
@@ -924,10 +981,14 @@ The keys will also contain the user specified arguments (the ones
 beginning with C<_> (underscore) as well as C<uri> key (the original
 movie URI).
 
+The C<store> results will also contain C<title> if you are storing by
+a single C<get_uri> method/event call.
+
 =head1 PREREQUISITES
 
 This module requires L<POE>, L<POE:Wheel::Run>, L<POE::Filter::Reference>,
-L<POE::Filter::Line> and L<WWW::YouTube::VideoURI>
+L<POE::Filter::Line>, L<WWW::YouTube::VideoURI>, L<HTML::Entities> 
+and L<LWP::UserAgent>
 
 =head1 BUGS
 

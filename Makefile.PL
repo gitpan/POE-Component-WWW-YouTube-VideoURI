@@ -10,6 +10,8 @@ WriteMakefile(
 	'POE::Filter::Reference' => 1.2187,
 	'POE::Filter::Line'	 => 1.1920,
 	'WWW::YouTube::VideoURI' => 0.1,
+	'LWP::UserAgent'	  => 2.036,
+	'HTML::Entities'      => 1.35,
     },
     ($] >= 5.005 ?    
       (ABSTRACT_FROM  => 'lib/POE/Component/WWW/YouTube/VideoURI.pm', 

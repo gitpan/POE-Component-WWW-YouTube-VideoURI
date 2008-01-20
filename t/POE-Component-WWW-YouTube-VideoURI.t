@@ -1,5 +1,5 @@
 
-use Test::More tests => 11;
+use Test::More tests => 14;
 
 my $tube_link = 'http://www.youtube.com/watch?v=dcmRImiffVM';
 my $requests_done = 0;
@@ -11,6 +11,7 @@ BEGIN {
     use_ok('LWP::UserAgent');
     use_ok('WWW::YouTube::VideoURI');
     use_ok('POE::Component::WWW::YouTube::VideoURI');
+    use_ok('HTML::Entities');
 };
 
 use POE qw(Component::WWW::YouTube::VideoURI);
@@ -83,6 +84,11 @@ sub got_link {
         );
     }
     
+    ok(
+        length $input->{title},
+        "We have movie title ($input->{title})",
+    );
+    
     is( $input->{_shtuf}, 'foos', "user defined arguments" );
     
     $poco->shutdown if ++$requests_done > 1;
@@ -107,6 +113,11 @@ sub inter_session_link {
             "checking that FLV URI matches what expected."
         );
     }
+    
+    ok(
+        length $input->{title},
+        "We have movie title ($input->{title})",
+    );
     
     is( $input->{_shtuf}, 'bars', "user defined arguments" );
     

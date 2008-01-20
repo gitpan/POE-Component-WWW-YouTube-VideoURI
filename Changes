@@ -1,5 +1,8 @@
 Revision history for Perl extension POE::Component::WWW::YouTube::VideoURI.
 
+0.03  Tue Jan 20 12:20:00 2008
+    - Added movie title fetching functionality
+
 0.02  Tue Jan 15 00:46:00 2008
 	- updated docs to indicate the is_store key
 
