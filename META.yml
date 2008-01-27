@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                POE-Component-WWW-YouTube-VideoURI
-version:             0.03
+version:             0.04
 abstract:            Non-blocking L<POE> wrapper around
 license:             ~
 author:              
