@@ -4,7 +4,7 @@ use 5.008008;
 use strict;
 use warnings;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use POE qw( Wheel::Run  Filter::Reference  Filter::Line );
 use Carp;
@@ -62,6 +62,7 @@ sub spawn {
 
 sub _start {
     my ( $kernel, $self ) = @_[ KERNEL, OBJECT ];
+    $self->{session_id} = $_[SESSION]->ID();
     
     if ( $self->{alias} ) {
         $kernel->alias_set( $self->{alias} );

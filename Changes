@@ -1,5 +1,8 @@
 Revision history for Perl extension POE::Component::WWW::YouTube::VideoURI.
 
+0.05  Sat Feb  2 12:24:00 2008
+    - Fixed session ID bug
+
 0.04  Sun Jan 27 12:00:00 2008
     - Fixed Component options bug
 
