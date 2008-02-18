@@ -1,9 +1,11 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
 
 my $Store_Dir = shift || './';
+
+use lib '../lib';
 
 use POE qw(Component::WWW::YouTube::VideoURI);
 
@@ -16,7 +18,6 @@ POE::Session->create(
         main => [ qw( _start  got_link  downloaded ) ]
     ],
 );
-
 
 $poe_kernel->run;
 
@@ -90,3 +91,10 @@ sub downloaded {
     print "\nAbout to quit....\n";
     $poe_kernel->post( tube => 'shutdown' );
 }
+
+=pod
+
+Usage: perl tuber.pl <optional_store_dir>
+
+=cut
+

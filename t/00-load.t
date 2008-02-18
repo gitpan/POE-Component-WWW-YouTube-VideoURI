@@ -1,17 +1,26 @@
+#!/usr/bin/env/perl
 
-use Test::More tests => 14;
+use Test::More tests => 18;
+
+
+diag( "Testing POE::Component::WWW::YouTube::VideoURI $POE::Component::WWW::YouTube::VideoURI::VERSION, Perl $], $^X" );
+
 
 my $tube_link = 'http://www.youtube.com/watch?v=dcmRImiffVM';
 my $requests_done = 0;
 
-use lib 'lib';
+use lib '../lib';
 
 BEGIN {
-    use_ok('POE');
     use_ok('LWP::UserAgent');
     use_ok('WWW::YouTube::VideoURI');
-    use_ok('POE::Component::WWW::YouTube::VideoURI');
+    use_ok('POE');
+    use_ok('POE::Wheel::Run');
+    use_ok('POE::Filter::Reference');
+    use_ok('POE::Filter::Line');
+    use_ok('Carp');
     use_ok('HTML::Entities');
+    use_ok('POE::Component::WWW::YouTube::VideoURI');
 };
 
 use POE qw(Component::WWW::YouTube::VideoURI);

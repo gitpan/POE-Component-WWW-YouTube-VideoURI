@@ -1,4 +1,7 @@
-Revision history for Perl extension POE::Component::WWW::YouTube::VideoURI.
+Revision history for POE-Component-WWW-YouTube-VideoURI
+
+0.06  Sun Feb 17 18:39:00 2008
+    - fixed distro packaging.
 
 0.05  Sat Feb  2 12:24:00 2008
     - Fixed session ID bug
@@ -10,9 +13,8 @@ Revision history for Perl extension POE::Component::WWW::YouTube::VideoURI.
     - Added movie title fetching functionality
 
 0.02  Tue Jan 15 00:46:00 2008
-	- updated docs to indicate the is_store key
+    - updated docs to indicate the is_store key
 
 0.01  Sun Jan 13 08:40:12 2008
-	- original version; created by h2xs 1.23 with options
-		-X --skip-exporter --skip-autoloader -v 0.01 -n POE::Component::WWW::YouTube::VideoURI
+        First version, released on an unsuspecting world.
 

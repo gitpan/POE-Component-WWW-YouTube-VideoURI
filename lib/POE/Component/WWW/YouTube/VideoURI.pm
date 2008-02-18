@@ -1,11 +1,12 @@
 package POE::Component::WWW::YouTube::VideoURI;
 
-use 5.008008;
-use strict;
 use warnings;
+use strict;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
+use WWW::YouTube::VideoURI;
+use LWP::UserAgent;
 use POE qw( Wheel::Run  Filter::Reference  Filter::Line );
 use Carp;
 
@@ -20,18 +21,6 @@ sub spawn {
     
     delete $params{options}
         unless ref $params{options} eq 'HASH';
-
-    eval {
-        use WWW::YouTube::VideoURI;
-    };
-    die "Problem loading WWW::YouTube::VideoURI, please check ($@)"
-        if $@;
-
-    eval {
-        use LWP::UserAgent;
-    };
-    die "Problem loading LWP::UserAgent, please check ($@)"
-        if $@;
 
     my $self = bless \%params, $package;
     
@@ -54,7 +43,7 @@ sub spawn {
                 )
             ],
         ],
-	( defined $params{options} ? ( options => $params{options} ) : () ),
+    ( defined $params{options} ? ( options => $params{options} ) : () ),
     )->ID;
     
     return $self;
@@ -992,24 +981,53 @@ This module requires L<POE>, L<POE:Wheel::Run>, L<POE::Filter::Reference>,
 L<POE::Filter::Line>, L<WWW::YouTube::VideoURI>, L<HTML::Entities> 
 and L<LWP::UserAgent>
 
-=head1 BUGS
-
-None known.
-
 =head1 SEE ALSO
 
 L<POE>, L<WWW::YouTube::VideoURI>
 
 =head1 AUTHOR
 
-Zoffix Znet, E<lt>zoffix@cpan.orgE<gt>
+Zoffix Znet, C<< <zoffix at cpan.org> >>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 BUGS
 
-Copyright (C) 2008 by Zoffix Znet
+Please report any bugs or feature requests to C<bug-poe-component-www-youtube-videouri at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=POE-Component-WWW-YouTube-VideoURI>.  I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.8.8 or,
-at your option, any later version of Perl 5 you may have available.
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc POE::Component::WWW::YouTube::VideoURI
+
+You can also look for information at:
+
+=over 4
+
+=item * RT: CPAN's request tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=POE-Component-WWW-YouTube-VideoURI>
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/POE-Component-WWW-YouTube-VideoURI>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/POE-Component-WWW-YouTube-VideoURI>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/POE-Component-WWW-YouTube-VideoURI>
+
+=back
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2008 Zoffix Znet, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
 
 =cut
